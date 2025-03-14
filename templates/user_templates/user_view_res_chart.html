@@ -1,0 +1,29 @@
+{% block chart %}
+<div class="mt-4">
+    <h4>Past Performance</h4>
+    <canvas id="quizChart"></canvas>
+</div>
+
+<script>
+    var ctx = document.getElementById('quizChart').getContext('2d');
+    var quizChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ quizzes | tojson }},
+            datasets: [{
+                label: 'Scores',
+                data: {{ scores | tojson }},
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+{% endblock %}

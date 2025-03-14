@@ -1,0 +1,64 @@
+{% extends "user_templates/user_sidebar.html" %}
+
+{% block content %}
+<h1 class="dashboard-title">User Profile</h1>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Search Input -->
+<div class="mb-3">
+    <input type="text" id="searchInput" class="form-control" placeholder="Search Quiz...">
+</div>
+
+<!-- Quiz Attempts -->
+<h2>Quiz History</h2>
+{% if quiz_attempts %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Quiz Name</th>
+                <th>Attempt Number</th>
+                <th>Score</th>
+                <th>Total Questions</th>
+                
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="quizTable">
+            {% for quiz in quiz_attempts %}
+            <tr class="quiz-row" data-quiz-name="{{ quiz.quiz_name | lower }}">
+                <td>{{ quiz.quiz_name }}</td>
+                <td>{{ quiz.attempt_id }}</td>
+                
+                <td>{{ quiz.total_score }}</td>
+                <td>{{ quiz.total_questions_attempted }}</td>
+                
+                <td>{{ quiz.start_time.strftime('%d-%m-%Y %H:%M') }}</td>
+                <td>{{ quiz.end_time.strftime('%d-%m-%Y %H:%M') if quiz.end_time else 'Ongoing' }}</td>
+                <td>
+                    <a href="{{ url_for('user.view_quiz', quiz_id=quiz.quiz_id, username=username, attempt_id=quiz.attempt_id) }}"class="btn btn-primary btn-sm">  
+                        View Results
+                    </a>
+               </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No quiz attempts yet.</p>
+{% endif %}
+
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+        let filter = this.value.toLowerCase().trim();
+        let rows = document.querySelectorAll(".quiz-row");
+        
+        rows.forEach(row => {
+            let quizName = row.getAttribute("data-quiz-name");
+            row.style.display = quizName.includes(filter) ? "table-row" : "none";
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Quiz Questions</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='adminStyle.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2><i class="bi bi-question-circle"></i>Add Quiz Question</h2>
+        </div>
+        <div class="form-content">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="quiz_id">Select Quiz</label>
+                    <select name="quiz_id" id="quiz_id" required>
+                        <option value="" disabled selected>Choose a quiz</option>
+                        {% for quiz in quizzes %}
+                            <option value="{{ quiz.id }}">Quiz {{ quiz.quiz_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="question_statement">Question</label>
+                    <input type="text" name="question_statement" id="question_statement" placeholder="Enter question statement" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="option_1">Option 1</label>
+                    <input type="text" name="option_1" id="option_1" placeholder="Enter first option" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="option_2">Option 2</label>
+                    <input type="text" name="option_2" id="option_2" placeholder="Enter second option" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="option_3">Option 3</label>
+                    <input type="text" name="option_3" id="option_3" placeholder="Enter third option" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="option_4">Option 4</label>
+                    <input type="text" name="option_4" id="option_4" placeholder="Enter fourth option" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="correct_option">Correct Option (1-4)</label>
+                    <input type="number" name="correct_option" id="correct_option" min="1" max="4" placeholder="Enter number of correct option" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="question_marks">Marks</label>
+                    <input type="number" name="question_marks" id="question_marks" placeholder="Enter marks for this question" required>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Question
+                    </button>
+                    <a href="javascript:history.back()" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Go Back
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

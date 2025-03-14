@@ -1,0 +1,40 @@
+{% extends "user_templates/user_sidebar.html" %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<h1 class="dashboard-title">Quiz Results for {{ quiz.quiz_name }}</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Your Answer</th>
+            <th>Correct Answer</th>
+            <th>Status</th>
+            <th>Marks</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for result in results %}
+        <tr>
+            <td>{{ result.question }}</td>
+            <td>{{ result.user_answer if result.user_answer else "Not Answered" }}</td>
+            <td>{{ result.correct_answer }}</td>
+            <td>
+                {% if result.is_correct %}
+                    <span class="badge bg-success">Correct</span>
+                {% else %}
+                    <span class="badge bg-danger">Wrong</span>
+                {% endif %}
+            </td>
+            <td>{{ total_marks}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Your Score: {{ correct_answers }}/{{ total_marks }}</h3>
+
+<a href="{{ url_for('user.quiz', username=username) }}" class="btn btn-primary">Back to Quizzes</a>
+
+{% endblock %}

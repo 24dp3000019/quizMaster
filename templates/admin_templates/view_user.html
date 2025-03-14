@@ -1,0 +1,61 @@
+{% extends "admin_templates/admin_sidebar.html" %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container mt-4">
+    <h2>Quiz Attempts for {{ user.username }}</h2>
+
+    <!-- Search bar -->
+    <input type="text" id="searchBox" class="form-control mb-3" placeholder="Search quiz attempts..." onkeyup="searchQuizzes()">
+
+    {% if quiz_attempts %}
+    <table class="table table-bordered" id="quizTable">
+        <thead>
+            <tr>
+                <th>Quiz Name</th>
+                <th>Attempt Number</th>
+                <th>Score</th>
+                <th>Questions Attempted</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attempt in quiz_attempts %}
+            <tr>
+                <td>{{ attempt.quiz_name }}</td>
+                <td>{{ attempt.attempt_id }}</td>
+                <td>{{ attempt.total_score }}/{{ attempt.total_marks }}</td>
+                <td>{{ attempt.total_questions_attempted }}</td>
+                <td>{{ attempt.start_time.strftime('%Y-%m-%d %H:%M:%S') if attempt.start_time else 'N/A' }}</td>
+                <td>{{ attempt.end_time.strftime('%Y-%m-%d %H:%M:%S') if attempt.end_time else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No quiz attempts found for this user.</p>
+    {% endif %}
+
+    <!-- Chart to show user performance -->
+    {% include "user_templates/user_view_res_chart.html" %}
+</div>
+
+<script>
+function searchQuizzes() {
+    let input = document.getElementById("searchBox").value.toLowerCase();
+    let table = document.getElementById("quizTable");
+    let rows = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < rows.length; i++) {
+        let quizName = rows[i].getElementsByTagName("td")[0]; // Get the quiz name column
+        if (quizName) {
+            let textValue = quizName.textContent || quizName.innerText;
+            rows[i].style.display = textValue.toLowerCase().includes(input) ? "" : "none";
+        }
+    }
+}
+</script>
+
+{% endblock %}

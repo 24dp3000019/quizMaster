@@ -1,0 +1,45 @@
+{# _dashboard_chart.html #}
+<div class="chart-container" style="width: 80%; margin:0 auto ; padding: 0px;">
+    <canvas id="dashboardChart"></canvas>
+</div>
+
+<script>
+    const ctx = document.getElementById('dashboardChart').getContext('2d');
+    const dashboardChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Active Users', 'Subjects', 'Total Quizzes', 'Questions','Total Chapters'],
+            datasets: [{
+                label: 'Statistics',
+                data: [
+                    {{ active_users }},
+                    {{ total_subjects }},
+                    {{ total_quizzes }},
+                    {{ total_questions }},
+                    {{ total_chapters }}
+                ],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)','rgba(255, 99, 132, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)','rgba(255, 99, 132, 0.5)'
+                ],
+                borderWidth:1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>

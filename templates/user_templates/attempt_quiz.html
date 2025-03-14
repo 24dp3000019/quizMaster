@@ -1,0 +1,85 @@
+{% extends "user_templates/user_sidebar.html" %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container mt-4">
+    <h2 class="text-center">{{ quiz.quiz_name }}</h2>
+    
+    <p class="text-center">Time Duration: {{ quiz.time_duration }} minutes</p>
+
+    <!-- Timer Display -->
+    <div class="alert alert-info text-center" id="timer-box">
+        Time Remaining: <span id="timer"></span>
+    </div>
+
+    <form id="quiz-form" method="POST">
+        {% for question in questions %}
+        <div class="card my-3">
+            <div class="card-body">
+                <h5 class="card-title mb-3">
+                    Q{{ loop.index }}. {{ question.question_statement }} 
+                    <h5 class="text-end text-secondary">Marks: {{ question.question_marks }}</h5>
+                </h5>
+                <div class="d-flex flex-column gap-2">
+                    <div class="form-check d-flex align-items-center">
+                        <input class="form-check-input me-2" type="radio" name="question_{{ question.id }}" value="1" required>
+                        <label class="form-check-label">{{ question.option_1 }}</label>
+                    </div>
+                    <div class="form-check d-flex align-items-center">
+                        <input class="form-check-input me-2" type="radio" name="question_{{ question.id }}" value="2">
+                        <label class="form-check-label">{{ question.option_2 }}</label>
+                    </div>
+                    <div class="form-check d-flex align-items-center">
+                        <input class="form-check-input me-2" type="radio" name="question_{{ question.id }}" value="3">
+                        <label class="form-check-label">{{ question.option_3 }}</label>
+                    </div>
+                    <div class="form-check d-flex align-items-center">
+                        <input class="form-check-input me-2" type="radio" name="question_{{ question.id }}" value="4">
+                        <label class="form-check-label">{{ question.option_4 }}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary" id="submit-btn">Submit Quiz</button>
+        </div>
+    </form>
+</div>
+
+<!-- JavaScript Timer Script -->
+<script>
+    let timeLeft = {{ quiz.time_duration }} * 60; // Convert minutes to seconds
+    const timerDisplay = document.getElementById('timer');
+    const quizForm = document.getElementById('quiz-form');
+    const submitBtn = document.getElementById('submit-btn');
+
+    function updateTimer() {
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            submitBtn.disabled = true; // Disable submit button
+            alert("Time's up! Your quiz will be submitted automatically.");
+            quizForm.submit(); // Auto-submit the form
+        } else {
+            timeLeft--;
+        }
+    }
+
+    // Prevent multiple submissions
+    quizForm.addEventListener('submit', function() {
+        submitBtn.disabled = true; // Disable submit button on submission
+    });
+
+    // Start timer on page load
+    let timerInterval = setInterval(updateTimer, 1000);
+    updateTimer(); // Call immediately to show initial time
+</script>
+
+{% endblock %}
