@@ -151,7 +151,7 @@ def add_user():
         db.session.commit()
         return redirect(url_for('adminManaging.manage_users'))
 
-    return render_template('add_user.html')
+    return render_template('admin_templates/add_user.html')
 
 #====================================================\MANAGE USERS=========================================================
 
