@@ -12,7 +12,7 @@ adminManagingChapter_bp = Blueprint('adminManagingChapter', __name__, url_prefix
 def admin_required(func):
     def wrapper(*args, **kwargs):
         if not session.get('user_id') or not session.get('is_admin'):
-            session.clear()  # Clear session for security
+            session.clear()  
             return redirect(url_for('auth.login'))
         return func(*args, **kwargs)
     wrapper.__name__ = func.__name__
@@ -38,7 +38,7 @@ def add_chapter():
             db.session.commit()
             return render_template('success_page.html', message="Chapter added successfully!")
 
-    subjects = Subject.query.all()  # Fetch subjects from the database
+    subjects = Subject.query.all() 
     return render_template('admin_templates/add_chapters.html', subjects=subjects)
 
 
@@ -61,13 +61,13 @@ def edit_chapter(chapter_id):
         new_name = request.form['name']
         new_description = request.form['description']
 
-        # Check if the chapter name already exists within the same subject
+        
         existing_chapter = Chapter.query.filter_by(name=new_name, subject_id=chapter.subject_id).first()
         if existing_chapter and existing_chapter.id != chapter_id:
             flash('Chapter name already exists!', 'danger')
             return redirect(url_for('adminManaging.edit_chapter', chapter_id=chapter_id))
 
-        # Update chapter details
+      
         chapter.name = new_name
         chapter.description = new_description
         db.session.commit()

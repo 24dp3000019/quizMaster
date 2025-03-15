@@ -20,7 +20,7 @@ class Quiz_table(db.Model):
     quiz_name = db.Column(db.Text,nullable=False)  
     time_duration = db.Column(db.Integer, nullable=False)  
     remarks = db.Column(db.Text) 
-    quiz_date = db.Column(db.Date, nullable=False)  # New column for quiz date
+    quiz_date = db.Column(db.Date, nullable=False) 
     questions = db.relationship('Question_Table', backref='quiz', lazy=True, cascade="all, delete")
 
 class Subject(db.Model):
@@ -61,9 +61,7 @@ class Quiz_Attempt_Table(db.Model):
     is_correct = db.Column(db.Boolean)
     question = db.relationship('Question_Table', backref='attempts', lazy=True)
 
-    __table_args__ = (
-        db.UniqueConstraint('attempt_id', 'user_id', 'quiz_id', 'question_id', name='unique_attempt_question'),
-    )
+    
 
 class Score_Table(db.Model):
     __tablename__ = 'score_table'
@@ -76,6 +74,4 @@ class Score_Table(db.Model):
     correct_answers = db.Column(db.Integer, nullable=False)
     start_time = db.Column(db.DateTime, default=datetime.utcnow) 
     end_time = db.Column(db.DateTime,nullable=True)
-    __table_args__ = (
-        db.UniqueConstraint('attempt_id', 'user_id', 'quiz_id', name='unique_score_attempt'),
-    )
+    

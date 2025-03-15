@@ -10,16 +10,16 @@ userDashboard_bp = Blueprint('userDashboard', __name__, url_prefix='/user')
 
 @userDashboard_bp.route('/dashboard/<username>')
 def dashboard(username):
-    # Check if user is logged in and not an admin
+   
     if 'user_id' not in session or  session.get('is_admin'):
         return redirect(url_for('auth.login'))
 
-    # Find the user
+   
     user = User.query.filter_by(username=username).first()
     if not user:
         return redirect(url_for('auth.login'))
 
-    # Fetching quiz attempts and scores for the user
+   
     quiz_attempts = (
         db.session.query(Quiz_table.quiz_name, Score_Table.total_score, Score_Table.start_time)
         .join(Score_Table, Score_Table.quiz_id == Quiz_table.id)
@@ -27,13 +27,13 @@ def dashboard(username):
         .all()
     )
 
-    # Count total subjects
+   
     total_subjects = Subject.query.count()
 
-    # Count total chapters
+   
     total_chapters = Chapter.query.count()
 
-    # Count total available quizzes
+    
     total_quizzes = Quiz_table.query.count()
 
     return render_template(

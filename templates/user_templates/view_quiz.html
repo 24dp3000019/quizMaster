@@ -17,8 +17,8 @@
             <th>Your Answer</th>
             <th>Correct Answer</th>
             <th>Status</th>
-            <th>Scored Marks</th>  <!-- Added Scored Marks Column -->
-            <th>Question Marks</th> <!-- Added Question Marks Column -->
+            <th>Scored Marks</th> 
+            <th>Question Marks</th>
         </tr>
     </thead>
     <tbody>
@@ -49,13 +49,13 @@
             </td>
             <td>
                 {% if result.is_correct %}
-                    {{ result.question_marks }}  <!-- User scored marks -->
+                    {{ result.question_marks }}  
                 {% else %}
                     0
                 {% endif %}
             </td>
             <td>
-                {{ result.question_marks }}  <!-- Total marks for the question -->
+                {{ result.question_marks }} 
             </td>
         </tr>
         {% endfor %}
@@ -65,7 +65,7 @@
     <h4>Total Score: {{ correct_marks }}/{{ total_marks }}</h4>
 </div>
 
-<!-- User Performance Chart -->
+
 <div class="mt-4">
     <h4>Past Performance</h4>
     <canvas id="quizChart"></canvas>

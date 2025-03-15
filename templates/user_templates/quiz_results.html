@@ -11,7 +11,7 @@
             <th>Your Answer</th>
             <th>Correct Answer</th>
             <th>Status</th>
-            <th>Marks</th>
+          
         </tr>
     </thead>
     <tbody>
@@ -27,7 +27,8 @@
                     <span class="badge bg-danger">Wrong</span>
                 {% endif %}
             </td>
-            <td>{{ total_marks}}</td>
+            
+
         </tr>
         {% endfor %}
     </tbody>
@@ -35,6 +36,6 @@
 
 <h3>Your Score: {{ correct_answers }}/{{ total_marks }}</h3>
 
-<a href="{{ url_for('user.quiz', username=username) }}" class="btn btn-primary">Back to Quizzes</a>
+<a href="{{ url_for('userQuiz.quiz', username=username) }}" class="btn btn-primary">Back to Quizzes</a>
 
 {% endblock %}

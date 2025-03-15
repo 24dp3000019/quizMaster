@@ -10,7 +10,7 @@ adminManagingQuestions_bp = Blueprint('adminManagingQuestions', __name__, url_pr
 def admin_required(func):
     def wrapper(*args, **kwargs):
         if not session.get('user_id') or not session.get('is_admin'):
-            session.clear()  # Clear session for security
+            session.clear() 
             return redirect(url_for('auth.login'))
         return func(*args, **kwargs)
     wrapper.__name__ = func.__name__
@@ -33,7 +33,7 @@ def add_quiz_questions():
         if quiz_id and question_text and option_1 and option_2 and option_3 and option_4 and correct_option:
             existing_question = Question_Table.query.filter_by(quiz_id=quiz_id, question_statement=question_text).first()
             if existing_question:
-                return render_template('error_page.html', message="This question already exists in the selected quiz!")
+                return render_template('error.html', message="This question already exists in the selected quiz!")
 
             new_question = Question_Table(
                 quiz_id=quiz_id, 
@@ -52,7 +52,7 @@ def add_quiz_questions():
                 return render_template('success_page.html', message="Quiz question added successfully!")
             except Exception as e:
                 db.session.rollback()
-                return render_template('error_page.html', message=f"Error adding question: {str(e)}")
+                return render_template('error.html', message=f"Error adding question: {str(e)}")
 
     quizzes = Quiz_table.query.all()  
     return render_template('admin_templates/add_quiz_questions.html', quizzes=quizzes)
@@ -65,7 +65,7 @@ def view_questions():
     questions = db.session.query(
         Question_Table.id, 
         Question_Table.quiz_id, 
-        Quiz_table.chapter_id,  # Fetch chapter_id from Quiz_table
+        Quiz_table.chapter_id, 
         Question_Table.question_statement, 
         Question_Table.option_1, 
         Question_Table.option_2, 

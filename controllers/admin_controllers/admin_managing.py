@@ -12,7 +12,7 @@ adminManaging_bp = Blueprint('adminManaging', __name__, url_prefix='/admin')
 def admin_required(func):
     def wrapper(*args, **kwargs):
         if not session.get('user_id') or not session.get('is_admin'):
-            session.clear()  # Clear session for security
+            session.clear() 
             return redirect(url_for('auth.login'))
         return func(*args, **kwargs)
     wrapper.__name__ = func.__name__
@@ -23,7 +23,7 @@ def admin_required(func):
 @adminManaging_bp.route('/manage_users',methods=['GET','POST'])
 @admin_required
 def manage_users():
-    users = User.query.all()  # Fetch all users from the database
+    users = User.query.all()  
     active_users = User.query.count()
     return render_template('admin_templates/manage_users.html',active_users=active_users, users=users)
 
@@ -40,7 +40,6 @@ def edit_user(user_id):
         date_input = request.form.get('dateofbirth')
       
 
-        # Check if username already exists (excluding the current user)
         existing_user = User.query.filter_by(username=new_username).first()
         if existing_user and existing_user.user_id != user_id:
             flash('Username already exists!', 'danger')
@@ -68,25 +67,24 @@ def edit_user(user_id):
 def view_user(user_id):
     user = User.query.get_or_404(user_id)
 
-    # Get quiz attempts with all necessary data
     quiz_attempts = db.session.query(
         Score_Table,
         Quiz_table.quiz_name,
-        Quiz_table.id.label('quiz_id')  # Get the quiz ID for calculating total marks
+        Quiz_table.id.label('quiz_id')  
     ).join(
         Quiz_table, Score_Table.quiz_id == Quiz_table.id
     ).filter(
         Score_Table.user_id == user.user_id
     ).all()
     
-    # Format the results for template rendering
+   
     formatted_attempts = []
     quizzes = []
     scores = []
     correct_answers = []
     
     for score, quiz_name, quiz_id in quiz_attempts:
-        # Calculate total possible marks for this quiz
+        
         total_marks = db.session.query(db.func.sum(Question_Table.question_marks)).filter(
             Question_Table.quiz_id == quiz_id
         ).scalar() or 0
@@ -99,7 +97,7 @@ def view_user(user_id):
             'correct_answers': score.correct_answers,
             'start_time': score.start_time,
             'end_time': score.end_time,
-            'total_marks': total_marks  # Add total marks to each attempt
+            'total_marks': total_marks 
         }
         formatted_attempts.append(attempt)
         quizzes.append(quiz_name)
@@ -119,15 +117,25 @@ def view_user(user_id):
 @admin_required
 def delete_user(user_id):
     user = User.query.get_or_404(user_id)
+    
     try:
+        # Delete all related quiz attempts
+        Quiz_Attempt_Table.query.filter_by(user_id=user.user_id).delete()
+        
+        # Delete all related scores
+        Score_Table.query.filter_by(user_id=user.user_id).delete()
+
+        # Delete the user
         db.session.delete(user)
         db.session.commit()
-        flash('User deleted successfully!', 'success')
+        
+        flash('User and all related data deleted successfully!', 'success')
     except IntegrityError:
         db.session.rollback()
         flash('Error deleting user.', 'danger')
 
     return redirect(url_for('adminManaging.manage_users'))
+
 
 
 

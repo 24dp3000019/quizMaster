@@ -52,34 +52,44 @@
 
 <!-- JavaScript Timer Script -->
 <script>
-    let timeLeft = {{ quiz.time_duration }} * 60; // Convert minutes to seconds
+    let totalTime = {{ quiz.time_duration }} * 60; 
     const timerDisplay = document.getElementById('timer');
     const quizForm = document.getElementById('quiz-form');
     const submitBtn = document.getElementById('submit-btn');
 
+    let startTime = localStorage.getItem('quizStartTime');
+    if (!startTime) {
+        startTime = Date.now(); 
+        localStorage.setItem('quizStartTime', startTime);
+    }
+
     function updateTimer() {
-        let minutes = Math.floor(timeLeft / 60);
-        let seconds = timeLeft % 60;
-        timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        let elapsedTime = Math.floor((Date.now() - startTime) / 1000); 
+        let timeLeft = totalTime - elapsedTime;
 
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
-            submitBtn.disabled = true; // Disable submit button
+            submitBtn.disabled = true;
             alert("Time's up! Your quiz will be submitted automatically.");
-            quizForm.submit(); // Auto-submit the form
-        } else {
-            timeLeft--;
+            localStorage.removeItem('quizStartTime'); 
+            quizForm.submit();
+            return;
         }
+
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 
-    // Prevent multiple submissions
-    quizForm.addEventListener('submit', function() {
-        submitBtn.disabled = true; // Disable submit button on submission
+    quizForm.addEventListener('submit', function () {
+        submitBtn.disabled = true;
+        localStorage.removeItem('quizStartTime');
     });
 
     // Start timer on page load
     let timerInterval = setInterval(updateTimer, 1000);
-    updateTimer(); // Call immediately to show initial time
+    updateTimer();
 </script>
+
 
 {% endblock %}

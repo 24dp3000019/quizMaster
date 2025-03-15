@@ -6,12 +6,12 @@ admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 @admin_bp.route('/dashboard')
 def dashboard():
-    # Check if user is logged in and is an admin
+   
     if not session.get('user_id') or not session.get('is_admin'):
-        session.clear()  # Clear session data for security
+        session.clear()  
         return redirect(url_for('auth.login'))
 
-    # Fetch statistics from the database
+   
     active_users = User.query.count()
     total_subjects = Subject.query.count()
     total_chapters=Chapter.query.count()

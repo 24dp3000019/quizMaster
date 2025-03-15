@@ -37,7 +37,7 @@
                 <td>{{ quiz.start_time.strftime('%d-%m-%Y %H:%M') }}</td>
                 <td>{{ quiz.end_time.strftime('%d-%m-%Y %H:%M') if quiz.end_time else 'Ongoing' }}</td>
                 <td>
-                    <a href="{{ url_for('user.view_quiz', quiz_id=quiz.quiz_id, username=username, attempt_id=quiz.attempt_id) }}"class="btn btn-primary btn-sm">  
+                    <a href="{{ url_for('userQuiz.view_quiz', quiz_id=quiz.quiz_id, username=username, attempt_id=quiz.attempt_id) }}"class="btn btn-primary btn-sm">  
                         View Results
                     </a>
                </td>

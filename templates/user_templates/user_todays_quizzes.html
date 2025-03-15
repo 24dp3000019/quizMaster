@@ -28,7 +28,7 @@
                                     <p><strong>Quiz Date:</strong> {{ quiz.quiz_date }}</p>
                                     <p><strong>Quiz Details:</strong> {{ quiz.remarks }}</p>
                                     <p><strong>Time Duration:</strong> {{ quiz.time_duration }} minutes</p>
-                                    <a href="{{ url_for('user.attempt_quiz', quiz_id=quiz.id, username=username) }}" class="btn btn-success">Attempt</a>
+                                    <a href="{{ url_for('userQuiz.attempt_quiz', quiz_id=quiz.id, username=username) }}" class="btn btn-success">Attempt</a>
                                 </div>
                             </div>
                         </div>

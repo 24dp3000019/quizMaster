@@ -24,10 +24,8 @@ def create_app():
 app = create_app()
 
 with app.app_context():
-    #db.drop_all()  
-    db.create_all()  # Recreate tables
+    db.create_all() 
     
-    # Ensure admin user exists
     admin = User.query.filter_by(username="admin").first()
     if not admin:
         admin = User(username="admin", password="admin123", fullname="Administrator", qualification="N/A", dateofbirth=datetime.strptime("2000-01-01", "%Y-%m-%d").date(), is_admin=True)
@@ -44,5 +42,5 @@ def homepage():
     return render_template("homepage.html")
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080,debug=True)
+    app.run()
 

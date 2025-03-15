@@ -54,13 +54,13 @@ def edit_subject(subject_id):
         new_name = request.form['name']
         new_description = request.form['description']
 
-        # Check if the subject name already exists
+      
         existing_subject = Subject.query.filter_by(name=new_name).first()
         if existing_subject and existing_subject.id != subject_id:
             flash('Subject name already exists!', 'danger')
             return redirect(url_for('adminManaging.edit_subject', subject_id=subject_id))
 
-        # Update subject details
+        
         subject.name = new_name
         subject.description = new_description
         db.session.commit()
@@ -74,7 +74,7 @@ def edit_subject(subject_id):
 def delete_subject(subject_id):
     subject = Subject.query.get_or_404(subject_id)
 
-    # Delete all related data manually
+   
     for chapter in subject.chapters:
         for quiz in chapter.quizzes:
             Question_Table.query.filter_by(quiz_id=quiz.id).delete()

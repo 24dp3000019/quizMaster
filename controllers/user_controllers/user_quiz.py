@@ -28,7 +28,7 @@ def attempt_quiz(quiz_id, username):
     quiz = Quiz_table.query.get_or_404(quiz_id)
     questions = Question_Table.query.filter_by(quiz_id=quiz_id).all()
 
-    # Prevent attempt if today is not the quiz date
+    
     if quiz.quiz_date != date.today():
         return render_template('error.html', message="You can only attempt this quiz on the scheduled date!")
 
@@ -37,12 +37,12 @@ def attempt_quiz(quiz_id, username):
         total_questions = len(questions)
         correct_answers = 0  
 
-        # ✅ Generate a new attempt ID every time user starts a new attempt
+       
         last_attempt = Quiz_Attempt_Table.query.filter_by(user_id=user.user_id, quiz_id=quiz_id).order_by(
             Quiz_Attempt_Table.attempt_id.desc()).first()
         current_attempt_id = (last_attempt.attempt_id + 1) if last_attempt else 1
 
-        # 🛠 Store attempts
+      
         attempts = []
         for question in questions:
             user_answer = request.form.get(f"question_{question.id}")
@@ -68,9 +68,9 @@ def attempt_quiz(quiz_id, username):
                 'is_correct': is_correct
             })
 
-        db.session.bulk_save_objects(attempts)  # ✅ Bulk insert attempts for efficiency
+        db.session.bulk_save_objects(attempts)  
 
-        # 📝 Store score entry  
+        
         score_entry = Score_Table(
             quiz_id=quiz_id, 
             user_id=user.user_id, 
@@ -84,7 +84,7 @@ def attempt_quiz(quiz_id, username):
         db.session.add(score_entry)
         db.session.commit()
 
-        # ✅ Fetch all previous attempts by the user for this quiz
+        
         past_attempts = Score_Table.query.filter_by(user_id=user.user_id, quiz_id=quiz_id).order_by(
             Score_Table.attempt_id.desc()).all()
 
@@ -96,7 +96,7 @@ def attempt_quiz(quiz_id, username):
                 quiz=quiz, 
                 results=results, 
                 correct_answers=correct_answers, 
-                total_marks=total_marks,  # Replace total_questions with total_marks
+                total_marks=total_marks, 
                 username=username, 
                 attempt_id=current_attempt_id, 
                 past_attempts=past_attempts,quiz_attempts=quiz_attempts
@@ -111,7 +111,7 @@ def view_quiz(quiz_id, username, attempt_id):
     user = User.query.filter_by(username=username).first()
 
     if not user:
-        return redirect(url_for('auth.login'))  # Redirect if user not found
+        return redirect(url_for('auth.login'))  
 
     quiz = Quiz_table.query.get_or_404(quiz_id)
 
@@ -152,7 +152,7 @@ def view_quiz(quiz_id, username, attempt_id):
     past_attempts = Score_Table.query.filter_by(user_id=user.user_id, quiz_id=quiz_id).order_by(Score_Table.start_time).all()
     quizzes = [f"Attempt {i+1}" for i in range(len(past_attempts))]
     scores = [attempt.total_score for attempt in past_attempts]
-
+    quiz_attempts = get_quiz_attempts(user.user_id)
     return render_template(
         'user_templates/view_quiz.html',
         quiz=quiz,
@@ -164,7 +164,7 @@ def view_quiz(quiz_id, username, attempt_id):
         correct_answers=correct_answers,
         username=user.username,
         attempt_id=attempt_id,
-        quizzes=quizzes,
+        quizzes=quizzes,quiz_attempts=quiz_attempts,
         scores=scores
     )
 
@@ -174,10 +174,10 @@ def view_quiz(quiz_id, username, attempt_id):
 @userQuiz_bp.route("/todays-quizzes/<username>")
 def todays_quizzes(username):
     user = User.query.filter_by(username=username).first()
-    today = date.today()  # Get today's date
-    chapters = Chapter.query.all()  # Fetch all chapters
+    today = date.today()  
+    chapters = Chapter.query.all() 
 
-    # Filter quizzes that match today's date
+    
     todays_chapters = []
     for chapter in chapters:
         todays_quizzes = [quiz for quiz in chapter.quizzes if quiz.quiz_date == today]

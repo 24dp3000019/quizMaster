@@ -49,7 +49,7 @@ function searchQuizzes() {
     let rows = table.getElementsByTagName("tr");
 
     for (let i = 1; i < rows.length; i++) {
-        let quizName = rows[i].getElementsByTagName("td")[0]; // Get the quiz name column
+        let quizName = rows[i].getElementsByTagName("td")[0];
         if (quizName) {
             let textValue = quizName.textContent || quizName.innerText;
             rows[i].style.display = textValue.toLowerCase().includes(input) ? "" : "none";

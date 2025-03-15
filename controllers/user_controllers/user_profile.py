@@ -14,8 +14,7 @@ def profile(username):
     if not user:
         return redirect(url_for('auth.login'))
 
-    # Get all unique quiz attempts with attempt_id
-    # We'll use a subquery to get the attempt_ids for each quiz
+    
     quiz_attempts = get_quiz_attempts(user.user_id)
 
     total_quizzes = Quiz_table.query.count()
